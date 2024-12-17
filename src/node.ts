@@ -3,4 +3,4 @@ import { createColors } from './index'
 
 export * from './index'
 
-export default createColors(isatty(1))
+export default createColors(process.env.FORCE_TTY !== undefined || isatty(1))
