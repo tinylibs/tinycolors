@@ -1,7 +1,6 @@
 import { fork } from 'node:child_process'
 import { createColors } from '../src/node'
 import { assert, expect, test } from 'vitest'
-import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
 
 const FMT = {
@@ -34,7 +33,7 @@ const FMT = {
 
 delete process.env.GITHUB_ACTIONS
 
-const pc = createColors(true)
+const pc = createColors()
 
 test('color matching', () => {
   for (let key in FMT) {
@@ -164,6 +163,7 @@ test('no maximum call stack error', () => {
 test('non-TTY does not enable colors', async () => {
   const proc = fork(resolve(__dirname, 'fixtures/child-process.mjs'), {
     stdio: 'pipe',
+    env: { TERM: 'dumb' },
   })
 
   let data = ''
