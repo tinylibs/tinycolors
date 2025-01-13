@@ -7,21 +7,28 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - 18
-          - 16
+          - 22
+          - 20
     name: Node.js ${{ matrix.node-version }} Quick
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Install Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+
       - name: Install dependencies
-        run: yarn install --frozen-lockfile --ignore-engines --ignore-scripts
+        run: pnpm i --frozen-lockfile
+
       - name: build
-        run: yarn build
+        run: pnpm build
+
       - name: Run unit tests
-        run: yarn test
+        run: pnpm test
         env:
           FORCE_COLOR: 2
