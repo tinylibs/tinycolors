@@ -1,6 +1,7 @@
 {
   "name": "tinyrainbow",
-  "version": "1.2.0",
+  "version": "2.0.0",
+  "packageManager": "pnpm@9.15.1",
   "description": "A small library to print colourful messages.",
   "type": "module",
   "scripts": {
