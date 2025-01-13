@@ -1,5 +1,8 @@
+import { fork } from 'node:child_process'
 import { createColors } from '../src/node'
-import { assert, test } from 'vitest'
+import { assert, expect, test } from 'vitest'
+import { fileURLToPath } from 'node:url'
+import { resolve } from 'node:path'
 
 const FMT = {
   reset: ['\x1b[0m', '\x1b[0m'],
@@ -155,4 +158,46 @@ test('no maximum call stack error', () => {
   delete process.env.GITHUB_ACTIONS
   assert.isTrue(pc.isColorSupported)
   assert.exists(pc.blue(pc.blue('x').repeat(10000)))
+  delete process.env.FORCE_COLOR
+})
+
+test('non-TTY does not enable colors', async () => {
+  const proc = fork(resolve(__dirname, 'fixtures/child-process.mjs'), {
+    stdio: 'pipe',
+  })
+
+  let data = ''
+  proc.stdout!.on('data', (msg) => {
+    data += msg
+  })
+
+  await new Promise((r) => proc.on('exit', r))
+
+  expect(data).toMatchInlineSnapshot(`
+    "Green
+    Red
+    { FORCE_TTY: undefined }
+    "
+  `)
+})
+
+test('FORCE_TTY enables colors', async () => {
+  const proc = fork(resolve(__dirname, 'fixtures/child-process.mjs'), {
+    stdio: 'pipe',
+    env: { FORCE_TTY: 'true' },
+  })
+
+  let data = ''
+  proc.stdout!.on('data', (msg) => {
+    data += msg
+  })
+
+  await new Promise((r) => proc.on('exit', r))
+
+  expect(data).toMatchInlineSnapshot(`
+    "[32mGreen[39m
+    [31mRed[39m
+    { FORCE_TTY: 'true' }
+    "
+  `)
 })

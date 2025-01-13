@@ -1,6 +1,19 @@
 import { isatty } from 'node:tty'
-import { createColors } from './index'
+import {
+  createColors as originalCreateColors,
+  isSupported as originalIsSupported,
+} from './index'
 
-export * from './index'
+export { Colors, Formatter, getDefaultColors } from './index'
 
-export default createColors(isatty(1))
+const isTTY = process.env.FORCE_TTY !== undefined || isatty(1)
+
+export function isSupported() {
+  return originalIsSupported(isTTY)
+}
+
+export function createColors() {
+  return originalCreateColors(isTTY)
+}
+
+export default originalCreateColors(isTTY)
