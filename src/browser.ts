@@ -1,5 +1,16 @@
-import { createColors } from './index'
+import {
+  createColors as originalCreateColors,
+  isSupported as originalIsSupported,
+} from './index'
 
-export * from './index'
+export { Colors, Formatter, getDefaultColors } from './index'
 
-export default createColors(false)
+export function isSupportted() {
+  return originalIsSupported()
+}
+
+export function createColors() {
+  return originalCreateColors()
+}
+
+export default originalCreateColors()
