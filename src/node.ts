@@ -8,7 +8,7 @@ export { Colors, Formatter, getDefaultColors } from './index'
 
 const isTTY = process.env.FORCE_TTY !== undefined || isatty(1)
 
-export function isSupportted() {
+export function isSupported() {
   return originalIsSupported(isTTY)
 }
 

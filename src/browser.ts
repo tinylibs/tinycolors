@@ -5,7 +5,7 @@ import {
 
 export { Colors, Formatter, getDefaultColors } from './index'
 
-export function isSupportted() {
+export function isSupported() {
   return originalIsSupported()
 }
 
